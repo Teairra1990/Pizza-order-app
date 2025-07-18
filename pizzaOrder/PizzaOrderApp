@@ -1,0 +1,127 @@
+from tkinter import*
+import random
+
+prices = {
+    "Small": 8.00,
+    "Medium": 10.00,
+    "Large": 12.00,
+    "Pepperoni": 1.50,
+    "Mushrooms": 1.00,
+    "Olives": 1.00
+}
+
+def Closing():
+    frmOrder.destroy()
+
+def Reset():
+    entCustomerName.delete(0,END)
+    lblCustomerCopy["text"]=""
+    pizzaSize.set("Small")
+    chkPepperoni.deselect()
+    chkMushrooms.deselect()
+    chkOlives.deselect()
+    listPayment.select_clear(0, END)
+    listPayment.select_set(0)
+    entCustomerName.focus()#Forcing the cursor back into the entry box
+
+def Process():
+    strCustomerName = entCustomerName.get()
+    size= pizzaSize.get()
+    orderNum = random.randint(1000, 9999) #for my random order number
+    total = prices[size]#base pizza prices
+
+    toppings = [] # to get pizza selected toppings
+    if varPepperoni.get():
+        toppings.append("Pepperoni")
+        total += prices["Pepperoni"]
+    if varMushrooms.get():
+        toppings.append("Mushrooms")
+        total += prices["Mushrooms"]
+    if varOlives.get():
+        toppings.append("Olives")
+        total += prices["Olives"]
+    toppingText = ", ".join(toppings) if toppings else "No toppings"
+    paymentMethod=listPayment.get(ACTIVE) # payment method
+
+
+    lblCustomerCopy["text"] = f"Thank you,{strCustomerName}. you ordered a {size} pizza. \nToppings: {toppingText}\nPayment: {paymentMethod}\nOrder Number: #{orderNum} \nTotal: #{total} "
+
+    
+frmOrder = Tk()
+#Here goes the source code
+frmOrder.configure(width=800, height=600,bg="sky blue")
+frmOrder.title("Best Pizza Ever! Order Form (Developed By Teairra Craig) ")
+
+pizzaSize = StringVar()
+pizzaSize.set("Medium") #for medium size pizza
+
+
+lblCompanyName = Label(text="Best Pizza Ever!!",font="Arial 16 bold",bg = "sky blue",fg="navy")
+lblCompanyName.place(x=300,y=20)
+
+lblCustomerName = Label(text="Customer Name:",font="Arial 14",bg = "sky blue",fg="navy")
+lblCustomerName.place(x=100,y=50)
+
+
+#lblCustomerCopy is displayed when the [Process] button is clicked
+lblCustomerCopy = Label(text="",font="Arial 14",bg="sky blue",fg="red")
+lblCustomerCopy.place(x=100,y=420)
+
+
+entCustomerName = Entry(font="Arial 14",bg= "white",fg="navy",width=30)
+entCustomerName.place(x=260,y=50)
+pizzaSize = StringVar()
+pizzaSize.set("Medium") 
+
+lblSize = Label(text="Pizza Size:", font="Arial 14", bg="sky blue", fg="navy")
+lblSize.place(x=100, y=150)
+
+rdoSmall = Radiobutton(text="Small", variable=pizzaSize, value="Small", bg="sky blue", font="Arial 12")
+rdoMedium = Radiobutton(text="Medium", variable=pizzaSize, value="Medium", bg="sky blue", font="Arial 12")
+rdoLarge = Radiobutton(text="Large", variable=pizzaSize, value="Large", bg="sky blue", font="Arial 12")
+
+rdoSmall.place(x=260, y=150)
+rdoMedium.place(x=340, y=150)
+rdoLarge.place(x=440, y=150)
+# My Topping for pizzas
+lblToppings = Label(text="Toppings:", font="Arial 14", bg="sky blue", fg="navy")
+lblToppings.place(x=100, y=200)
+
+#checkboxes for my  toppings
+varPepperoni = IntVar()
+varMushrooms = IntVar()
+varOlives = IntVar()
+
+chkPepperoni = Checkbutton(text="Pepperoni", variable=varPepperoni, bg="sky blue", font="Arial 12")
+chkMushrooms = Checkbutton(text="Mushrooms", variable=varMushrooms, bg="sky blue", font="Arial 12")
+chkOlives = Checkbutton(text="Olives", variable=varOlives, bg="sky blue", font="Arial 12")
+
+chkPepperoni.place(x=260, y=200)
+chkMushrooms.place(x=380, y=200)
+chkOlives.place(x=520, y=200)
+
+#My Payment List
+
+lblPayment = Label(text="Payment Method:", font="Arial 14", bg="sky blue", fg="navy")
+lblPayment.place(x=100, y=260)
+
+listPayment = Listbox(height=3, font="Arial 12", width=20)
+listPayment.place(x=260, y=260)
+listPayment.insert(END, "Cash")
+listPayment.insert(END, "Credit")
+listPayment.insert(END, "Debit")
+listPayment.select_set(0)  
+
+
+
+btnClose = Button(text="Quit",font="Arial 14",bg = "sky blue",fg="navy",width=8, command=Closing)
+btnClose.place(x=650,y=500)
+
+btnReset = Button(text="Reset",font="Arial 14",bg = "sky blue",fg="navy",width=8, command=Reset)
+btnReset.place(x=550,y=500)
+
+btnProcess = Button(text="Process",font="Arial 14",bg = "sky blue",fg="navy",width=8, command=Process)
+btnProcess.place(x=450,y=500)
+#Remember to use the mainloop method
+entCustomerName.focus()
+frmOrder.mainloop()
